@@ -7,19 +7,18 @@ on:
 
 jobs:
   deploy:
-    name: Deploy App
+    name: Deploy app
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Install Flyctl
-        uses: superfly/flyctl-actions/install@v1
+      - name: Setup Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Ensure volume exists
         run: |
           set -e
-          APP_NAME="n8n-test-poxxba"
+          APP_NAME="n8n-test-minsrq"
           VOLUME_NAME="n8n_data"
           REGION="sin"
 
@@ -37,6 +36,6 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
       - name: Deploy to Fly
-        run: flyctl deploy --remote
+        run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
