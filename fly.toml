@@ -1,18 +1,19 @@
-# fly.toml app configuration file generated for n8n
-
-app = "n8n-app" # Replace with your actual app name
-primary_region = "sin" # Singapore (adjust as needed)
+app = "your-n8n-app-name"
+primary_region = "sin" # or nearest region
 
 [build]
+  dockerfile = "Dockerfile"
+
+[env]
+  N8N_HOST = "your-n8n-app-name.fly.dev"
+  N8N_PORT = "5678"
+  N8N_PROTOCOL = "https"
+  N8N_EDITOR_BASE_URL = "https://your-n8n-app-name.fly.dev"
+  N8N_ENCRYPTION_KEY = "CHANGE_THIS_TO_A_LONG_RANDOM_KEY"
 
 [http_service]
   internal_port = 5678
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 0
-  processes = ["app"]
-
-[[mounts]]
-  source = "n8n_data"
-  destination = "/data"
+  min_machines_running = 1
