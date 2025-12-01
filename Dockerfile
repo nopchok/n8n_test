@@ -1,14 +1,16 @@
 FROM n8nio/n8n:latest
 
-# ใช้ /data เป็นโฟลเดอร์เก็บข้อมูล (Render จะ mount disk มาที่นี่)
+# ตำแหน่งเก็บข้อมูล (Render mount disk ที่นี่)
 ENV N8N_USER_FOLDER=/data
 ENV GENERIC_TIMEZONE=Asia/Bangkok
 
-# n8n ใช้ user node อยู่แล้วใน image
+# ให้ root สร้าง /data และตั้ง permission
+USER root
+RUN mkdir -p /data && chown -R node:node /data
+
+# กลับมาใช้ user node ตามปกติ
 USER node
 
-# พอร์ตของ n8n
 EXPOSE 5678
 
-# คำสั่งรัน n8n
 CMD ["n8n"]
