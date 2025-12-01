@@ -24,6 +24,7 @@ primary_region = "sin"
 
   # ให้ n8n เชื่อ proxy (แก้ warning X-Forwarded-For)
   N8N_TRUSTED_PROXIES = "*"
+  N8N_PROXY_HOPS = "1"
 
   # permission config file ให้เข้มขึ้น (ลบ warning permissions ได้)
   N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS = "true"
