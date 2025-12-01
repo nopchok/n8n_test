@@ -1,16 +1,17 @@
 FROM n8nio/n8n:latest
 
-# ตำแหน่งเก็บข้อมูล (Render mount disk ที่นี่)
+# ใช้ root ชั่วคราวเพื่อจัดการสิทธิ์ /data
+USER root
+
+# สร้างโฟลเดอร์ /data และให้สิทธิ์กับ user node
+RUN mkdir -p /data && chown -R node:node /data
+
+# ตั้งค่าตำแหน่งเก็บข้อมูล + timezone
 ENV N8N_USER_FOLDER=/data
 ENV GENERIC_TIMEZONE=Asia/Bangkok
 
-# ให้ root สร้าง /data และตั้ง permission
-USER root
-RUN mkdir -p /data && chown -R node:node /data
-
-# กลับมาใช้ user node ตามปกติ
+# กลับมาใช้ user node (ตามที่ image n8n ใช้อยู่แล้ว)
 USER node
 
-EXPOSE 5678
-
-CMD ["n8n"]
+# ไม่ต้องกำหนด CMD เอง ปล่อยให้ใช้ค่า default ของ n8n image
+# (base image มี CMD ["n8n"] อยู่แล้ว)
