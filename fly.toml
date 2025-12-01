@@ -1,19 +1,47 @@
-app = "your-n8n-app-name"
-primary_region = "sin" # or nearest region
+app = "n8n-on-fly"
+primary_region = "sin"
 
 [build]
   dockerfile = "Dockerfile"
 
 [env]
-  N8N_HOST = "your-n8n-app-name.fly.dev"
+  N8N_BASIC_AUTH_ACTIVE = "true"
+  N8N_BASIC_AUTH_USER = "admin"
+  # Do NOT commit your real password in public repos – override via Fly secrets
+  N8N_BASIC_AUTH_PASSWORD = "changeme"
   N8N_PORT = "5678"
   N8N_PROTOCOL = "https"
-  N8N_EDITOR_BASE_URL = "https://your-n8n-app-name.fly.dev"
-  N8N_ENCRYPTION_KEY = "CHANGE_THIS_TO_A_LONG_RANDOM_KEY"
+  N8N_HOST = "n8n-on-fly.fly.dev"
+  WEBHOOK_URL = "https://n8n-on-fly.fly.dev/"
 
-[http_service]
+  # Make sure n8n stores data on the mounted volume
+  N8N_USER_FOLDER = "/home/node/.n8n"
+
+[[mounts]]
+  source = "n8n_data"
+  destination = "/home/node/.n8n"
+
+[[services]]
   internal_port = 5678
-  force_https = true
-  auto_stop_machines = true
-  auto_start_machines = true
-  min_machines_running = 1
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "requests"
+    soft_limit = 20
+    hard_limit = 40
+
+  [[services.http_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "30s"
+    method = "get"
+    path = "/"
+    protocol = "http"
