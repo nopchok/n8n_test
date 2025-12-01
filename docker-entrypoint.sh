@@ -1,10 +1,11 @@
 #!/bin/sh
+set -e
 
-# Import workflow if not already imported
+# Import workflow if the file exists
 if [ -f /workflow.json ]; then
-    echo "Importing workflow..."
-    n8n import:workflow --input=/workflow.json || true
+  echo "Importing workflow from /workflow.json..."
+  n8n import:workflow --input=/workflow.json || echo "Import failed (maybe already imported). Continuing..."
 fi
 
-# Start n8n normally
-exec n8n
+# Call the original n8n entrypoint script from the base image
+exec docker-entrypoint.sh "$@"
