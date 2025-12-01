@@ -1,0 +1,18 @@
+# fly.toml app configuration file generated for n8n
+
+app = "n8n-app" # Replace with your actual app name
+primary_region = "sin" # Singapore (adjust as needed)
+
+[build]
+
+[http_service]
+  internal_port = 5678
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[mounts]]
+  source = "n8n_data"
+  destination = "/data"
