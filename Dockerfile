@@ -9,9 +9,10 @@ EXPOSE 5678
 # Copy workflow JSON into the image
 COPY workflow.json /workflow.json
 
-# Custom entrypoint that imports the workflow then starts n8n
+# Copy our custom entrypoint script
 COPY docker-entrypoint.sh /docker-entrypoint-custom.sh
-RUN chmod +x /docker-entrypoint-custom.sh
 
-# Use our custom entrypoint
-ENTRYPOINT ["/docker-entrypoint-custom.sh"]
+# Important: no chmod here
+
+# Use tini (like the base image) but run our script via sh
+ENTRYPOINT ["tini", "--", "sh", "/docker-entrypoint-custom.sh"]
