@@ -18,7 +18,7 @@ jobs:
       - name: Ensure volume exists
         run: |
           set -e
-          APP_NAME="n8n-test-minsrq"
+          APP_NAME="n8n-test-poxxba"
           VOLUME_NAME="n8n_data"
           REGION="sin"
 
