@@ -1,14 +1,14 @@
 FROM n8nio/n8n:latest
 
-# Optional: set timezone
+# ใช้ /data เป็นโฟลเดอร์เก็บข้อมูล (Render จะ mount disk มาที่นี่)
+ENV N8N_USER_FOLDER=/data
 ENV GENERIC_TIMEZONE=Asia/Bangkok
 
-# Create directory for n8n data (Fly will mount a volume here)
-RUN mkdir -p /home/node/.n8n && chown -R node:node /home/node/.n8n
-
+# n8n ใช้ user node อยู่แล้วใน image
 USER node
 
-# n8n listens on 5678 by default
+# พอร์ตของ n8n
 EXPOSE 5678
 
+# คำสั่งรัน n8n
 CMD ["n8n"]
