@@ -1,0 +1,42 @@
+name: Deploy to Fly.io
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flyctl
+        uses: superfly/flyctl-actions/install@v1
+
+      - name: Ensure volume exists
+        run: |
+          set -e
+          APP_NAME="n8n-test-poxxba"
+          VOLUME_NAME="n8n_data"
+          REGION="sin"
+
+          echo "Checking if volume $VOLUME_NAME exists..."
+          if flyctl volumes list --app "$APP_NAME" | grep -q "$VOLUME_NAME"; then
+            echo "Volume $VOLUME_NAME already exists. Skipping create."
+          else
+            echo "Volume $VOLUME_NAME not found. Creating..."
+            flyctl volumes create "$VOLUME_NAME" \
+              --app "$APP_NAME" \
+              --region "$REGION" \
+              --size 1
+          fi
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Deploy to Fly
+        run: flyctl deploy --remote
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
